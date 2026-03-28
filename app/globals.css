@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base theme (light) */
+:root {
+  --background: #dfdfdf;
+  --surface: #ececec;
+  --text: #1A1A1A;
+  --text-muted: #4c515c;
+  --text-light: #2e3847;
+  --border: #E5E7EB;
+  --border-light: #F3F4F6;
+  --primary: #0D9488;
+}
+
+/* Dark theme */
+.dark {
+  --background: #000308;
+  --surface: #010813;
+  --text: #F1F5F9;
+  --text-muted: #94A3AF;
+  --text-light: #64748B;
+  --border: #334155;
+  --border-light: #475569;
+  --primary: #14B8A6;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-text transition-colors duration-300;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-text;
+  }
+
+  /* All elements get border color from variable */
+  * {
+    border-color: var(--border);
+  }
+}
+
+@layer components {
+  .section-white { @apply bg-surface; }
+  .section-gray { @apply bg-background; }
+
+  .card {
+    @apply bg-surface border rounded-xl p-6 shadow-soft transition-colors duration-300;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-medium hover:border-primary;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-primary text-white rounded-lg font-semibold transition-all hover:bg-primary;
+  }
+
+  .btn-outline {
+    @apply px-6 py-3 border-2 border-text text-text hover:bg-text hover:text-background rounded-lg font-semibold transition-all;
+  }
+
+  .badge {
+    @apply inline-block px-3 py-1 text-sm font-medium rounded-full bg-primary text-white;
+  }
+
+  .section-eyebrow {
+    @apply text-sm font-semibold text-primary uppercase tracking-wider mb-3;
+  }
+}

@@ -1,0 +1,30 @@
+---
+title: "Earthquake Data Pipeline"
+badge: "REAL-TIME · ETL"
+role: "Data Engineer"
+description: "Real-time ETL: USGS API → PostgreSQL. Apache Airflow orchestration. Live Grafana dashboards for global seismic monitoring and trend analysis."
+stack: ["Python", "PostgreSQL", "Airflow", "Grafana", "SQLAlchemy"]
+githubUrl: "https://github.com/Rozieroz/Earthquake_Data_Pipline"
+featured: false
+impact: "Processing 100+ daily seismic events globally"
+image: "/images/projects/earthquake-pipeline.png"
+---
+
+## Overview
+
+A real-time data pipeline that ingests earthquake data from the USGS API, transforms it, and loads it into PostgreSQL. The data is visualized in Grafana dashboards for seismic activity monitoring.
+
+## Architecture
+
+- **Ingestion:** Python script fetching USGS GeoJSON every 5 minutes
+- **Orchestration:** Apache Airflow DAG for scheduling and monitoring
+- **Storage:** PostgreSQL with time-series optimization
+- **Visualization:** Grafana dashboards with maps and time-series charts
+
+## Key Metrics
+
+- Processes 100+ events daily
+- Historical data since 2000 (1M+ records)
+- Dashboard used by geology students and researchers
+
+[GitHub Repository](https://github.com/RoseWabere/Earthquake_Data_Pipline)

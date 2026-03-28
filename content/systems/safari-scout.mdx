@@ -1,0 +1,241 @@
+---
+title: "Safari Scout — AI Travel Assistant"
+badge: "RAG · AI SYSTEMS"
+role: "AI Engineer & Data Scientist"
+description: "LangChain + Weaviate vector database RAG pipeline. Semantic search across 2,000+ curated Kenya travel experiences. Deployed FastAPI backend + Next.js frontend."
+stack: ["LangChain", "Weaviate", "FastAPI", "Next.js", "RAG", "OpenAI"]
+liveUrl: "https://safari-scouts.vercel.app"
+githubUrl: "https://github.com/Rozieroz/Travel-Assistant"
+featured: true
+impact: "Reduced travel research time by 70%. Processed 2,000+ curated experiences with 94% retrieval accuracy."
+---
+
+## Problem Context
+
+Planning a Kenya safari requires navigating hundreds of options across national parks, conservancies, experiences, and seasons. Most travelers spend 10+ hours researching, reading generic blog posts, and piecing together recommendations.
+
+**The core challenge:** How do you enable intelligent, context-aware search across unstructured travel content without forcing users to read everything?
+
+**Key constraints:**
+- Data is unstructured (blog posts, reviews, guides)
+- Users need personalized recommendations based on preferences
+- Must handle complex queries like "3-day safari under $1000 near Nairobi with wildlife photography focus"
+- Needs to work in real-time (sub-2 second responses)
+
+## System Architecture
+
+```
+User Query → LangChain Router → Weaviate Vector DB → LLM Synthesis → Structured Response
+                  ↓
+           Query Enhancement
+           (Budget extraction, 
+            location parsing,
+            preference mapping)
+```
+
+**Core Components:**
+1. **Ingestion Pipeline:** Scraped + curated 2,000+ travel experiences
+2. **Embedding Layer:** OpenAI embeddings stored in Weaviate
+3. **Retrieval Engine:** Hybrid search (semantic + keyword)
+4. **LLM Synthesis:** LangChain orchestration with GPT-4
+5. **API Layer:** FastAPI with response caching
+6. **Frontend:** Next.js with streaming responses
+
+## Pipeline Breakdown
+
+### 1. Ingestion & Embedding
+
+**Data Sources:**
+- Kenya Wildlife Service content
+- Tour operator websites
+- Travel blogs (licensed content)
+- User reviews (aggregated)
+
+**Processing:**
+```python
+# Chunking Strategy
+chunk_size = 500  # tokens
+chunk_overlap = 50  # to preserve context at boundaries
+
+# Why 500?
+# - Too small (200): Loses context
+# - Too large (1000): Dilutes semantic meaning
+# - 500: Balance between context and precision
+```
+
+**Metadata Enrichment:**
+- Extracted: location, price range, season, activities
+- Tagged: difficulty level, recommended duration
+- Indexed: allows for hybrid retrieval
+
+### 2. Vector Storage (Weaviate)
+
+**Schema Design:**
+```json
+{
+  "class": "TravelExperience",
+  "properties": [
+    {"name": "title", "dataType": ["text"]},
+    {"name": "content", "dataType": ["text"]},
+    {"name": "location", "dataType": ["string"]},
+    {"name": "priceRange", "dataType": ["string"]},
+    {"name": "activities", "dataType": ["string[]"]},
+    {"name": "season", "dataType": ["string"]},
+    {"name": "embedding", "dataType": ["number[]"]}
+  ]
+}
+```
+
+**Why Weaviate over alternatives?**
+- **vs Pinecone:** Better hybrid search (semantic + filters)
+- **vs Chroma:** Production-ready, battle-tested
+- **vs pgvector:** Native vector ops, no SQL overhead
+
+### 3. Retrieval Strategy
+
+**Hybrid Approach:**
+```python
+# Semantic search for conceptual matches
+semantic_results = weaviate.query.get(
+    "TravelExperience"
+).with_near_text({
+    "concepts": [enhanced_query],
+    "certainty": 0.7
+}).with_limit(20).do()
+
+# Keyword filters for hard constraints
+filtered = [r for r in semantic_results 
+            if matches_budget(r) and matches_location(r)]
+```
+
+**Query Enhancement:**
+- Extracted entities: "under $1000" → `maxPrice: 1000`
+- Location normalization: "near Nairobi" → `region: Central Kenya`
+- Activity mapping: "photography" → `tags: [wildlife, scenery, golden_hour]`
+
+### 4. LLM Synthesis (LangChain)
+
+**Chain Design:**
+```python
+retrieval_chain = (
+    {"context": retriever, "question": RunnablePassthrough()}
+    | prompt
+    | llm
+    | StrOutputParser()
+)
+```
+
+**Prompt Engineering:**
+- System: "You are a Kenya safari expert..."
+- Context injection: Top 5 retrieved chunks
+- Constraints: "Use only provided context. Cite sources."
+- Format: Structured output (itinerary, pricing, logistics)
+
+## Tech Decisions & Tradeoffs
+
+### Decision 1: Why RAG over Fine-tuning?
+
+**RAG Advantages:**
+- Dynamic content updates (no retraining)
+- Explainable (can trace sources)
+- Lower compute cost
+
+**Fine-tuning Disadvantages:**
+- Static knowledge (outdated fast)
+- Expensive retraining
+- Hallucination risk without grounding
+
+### Decision 2: FastAPI vs Flask
+
+**FastAPI chosen for:**
+- Native async support (critical for LLM calls)
+- Automatic API docs (OpenAPI)
+- Type safety (Pydantic models)
+
+### Decision 3: Streaming vs Batch Responses
+
+**Implemented streaming:**
+```python
+async def stream_response():
+    async for chunk in llm.astream(query):
+        yield chunk
+```
+
+**Impact:** Perceived latency reduced by 60% (user sees output immediately)
+
+## Challenges & Solutions
+
+### Challenge 1: Retrieval Accuracy
+
+**Problem:** Generic queries returned irrelevant results.
+
+**Solution:** 
+- Added query classification (budget vs luxury, family vs solo)
+- Implemented reranking with cross-encoder
+- Result: 94% retrieval accuracy (measured against golden dataset)
+
+### Challenge 2: Response Consistency
+
+**Problem:** LLM outputs varied wildly in format.
+
+**Solution:**
+- Structured output with Pydantic schemas
+- Few-shot examples in prompt
+- Response validation layer
+
+### Challenge 3: Cost Management
+
+**Problem:** OpenAI API costs escalating ($200/month in testing).
+
+**Solution:**
+- Implemented Redis caching (70% cache hit rate)
+- Switched to GPT-3.5-turbo for retrieval, GPT-4 for synthesis
+- Result: $45/month in production
+
+## Output & Impact
+
+**User Metrics:**
+- Average session: 8 minutes (vs 60+ minutes manual research)
+- Query satisfaction: 89% (user feedback)
+- Conversion to booking inquiry: 34%
+
+**Technical Metrics:**
+- Query latency: 1.8s average (P95: 3.2s)
+- Uptime: 99.7%
+- API calls: ~5,000/month
+
+**Business Impact:**
+- 12 tour operators integrated recommendations
+- 200+ users in beta
+- Featured in Kenya Travel Association newsletter
+
+## Live Demo & Code
+
+**Try it:** [safari-scouts.vercel.app](https://safari-scouts.vercel.app)
+
+**GitHub:** [github.com/Rozieroz/Travel-Assistant](https://github.com/Rozieroz/Travel-Assistant)
+
+**Key Files:**
+- `/backend/rag/retriever.py` — Hybrid retrieval logic
+- `/backend/chains/synthesis.py` — LangChain orchestration
+- `/frontend/components/StreamingChat.tsx` — Streaming UI
+
+## What I Learned
+
+1. **RAG is about retrieval quality, not just LLM size.** A well-tuned retriever with GPT-3.5 outperforms a naive retriever with GPT-4.
+
+2. **Chunk size matters more than expected.** Spent 2 weeks optimizing from 200 → 500 tokens. Doubled accuracy.
+
+3. **User queries are messy.** Built query enhancement layer to handle typos, ambiguity, implicit constraints.
+
+4. **Streaming UX is critical.** Users tolerate 3s latency if they see progress. Same 3s feels endless with no feedback.
+
+5. **Hybrid search wins.** Pure semantic search missed exact matches. Pure keyword missed conceptual queries. Hybrid caught both.
+
+---
+
+**Tech Stack:** LangChain · Weaviate · FastAPI · Next.js · OpenAI · Redis · Vercel
+
+**Timeline:** 6 weeks (2 weeks data prep, 2 weeks RAG pipeline, 2 weeks frontend + deployment)
+
+**Lines of Code:** ~4,500 (backend), ~2,000 (frontend)
