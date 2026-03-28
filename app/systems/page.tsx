@@ -8,9 +8,7 @@ export const metadata: Metadata = {
 }
 
 export default function SystemsPage() {
-  const systems = getAllSystems()
-  const featured = systems.filter(s => s.featured)
-  const other = systems.filter(s => !s.featured)
+  const systems = getAllSystems()  // gets all systems from MDX
 
   return (
     <div className="min-h-screen pt-32 pb-24">
@@ -18,59 +16,39 @@ export default function SystemsPage() {
         {/* Header */}
         <div className="mb-16">
           <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-6 bg-primary-500"></div>
-            <span className="text-primary-500 uppercase text-xs font-semibold tracking-wider">
+            <div className="h-px w-6 bg-primary"></div>
+            <span className="text-primary uppercase text-xs font-semibold tracking-wider">
               Production Systems
             </span>
           </div>
           <h1 className="font-display text-5xl md:text-6xl font-black mb-6">
             All Systems
           </h1>
-          <p className="text-dark-400 text-xl max-w-3xl leading-relaxed">
+          <p className="text-text-muted text-xl max-w-3xl leading-relaxed">
             End-to-end intelligent systems across data engineering, AI/ML, and real-time analytics. 
             Each demonstrates architecture decisions, pipeline design, and measurable business impact.
           </p>
         </div>
 
-        {/* Featured Systems */}
-        {featured.length > 0 && (
+        {/* All Systems Grid – no separation into featured/other */}
+        {systems.length > 0 ? (
           <div className="mb-20">
-            <h2 className="font-display text-3xl font-bold mb-8 flex items-center gap-3">
-              <span>Flagship Systems</span>
-              <span className="px-3 py-1 bg-primary-500/20 border border-primary-500/30 rounded-full text-sm font-medium text-primary-400">
-                Featured
-              </span>
-            </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featured.map((system, index) => (
+              {systems.map((system, index) => (
                 <SystemCard key={system.slug} system={system} index={index} />
               ))}
             </div>
           </div>
-        )}
-
-        {/* Other Systems */}
-        {other.length > 0 && (
-          <div>
-            <h2 className="font-display text-3xl font-bold mb-8">
-              Additional Projects
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {other.map((system, index) => (
-                <SystemCard 
-                  key={system.slug} 
-                  system={system} 
-                  index={featured.length + index} 
-                />
-              ))}
-            </div>
+        ) : (
+          <div className="p-12 text-center border border-border rounded-xl">
+            <p className="text-text-muted">No systems found. Add MDX files to <code className="bg-surface px-2 py-1 rounded">content/systems/</code>.</p>
           </div>
         )}
 
-        {/* Categories Overview */}
+        {/* Categories Overview – stays as before */}
         <div className="mt-20 p-8 bg-white/5 border border-white/10 rounded-xl">
           <h3 className="font-display text-2xl font-bold mb-4">System Categories</h3>
-          <p className="text-dark-400 mb-6">
+          <p className="text-text-muted mb-6">
             Systems organized by technical domain and capability.
           </p>
           <div className="grid md:grid-cols-3 gap-4">

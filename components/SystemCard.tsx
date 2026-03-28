@@ -2,7 +2,19 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { System } from '@/lib/systems'
+
+interface System {
+  slug: string
+  title: string
+  badge: string
+  role: string
+  description: string
+  stack: string[]
+  liveUrl?: string
+  githubUrl?: string
+  impact: string
+  image?: string
+}
 
 interface SystemCardProps {
   system: System
@@ -16,29 +28,30 @@ export default function SystemCard({ system, index }: SystemCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
-      className="card card-hover group"
+      className="card card-hover group overflow-hidden"
     >
-      {/* Project Image */}
-      {system.image ? (
-        <div className="relative w-full h-48 mb-4 -mt-6 -mx-6 rounded-t-xl overflow-hidden bg-gray-100">
+      {/* Project Image - now fills card width properly */}
+      <div className="relative h-48 -mt-6 -mx-6 mb-4 overflow-hidden">
+        {system.image ? (
           <Image
             src={system.image}
             alt={system.title}
             fill
             className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-        </div>
-      ) : (
-        <div className="relative w-full h-48 mb-4 -mt-6 -mx-6 rounded-t-xl overflow-hidden bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center">
-          <div className="text-center text-text-muted">
-            <i className="fas fa-image text-4xl mb-2 text-primary-300"></i>
-            <p className="text-xs">
-              Add screenshot:<br/>
-              /public/images/projects/{system.slug}.png
-            </p>
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center">
+            <div className="text-center text-text-muted">
+              <i className="fas fa-image text-4xl mb-2 text-primary-300"></i>
+              <p className="text-xs">
+                Add screenshot:<br/>
+                /public/images/projects/{system.slug}.png
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Badge */}
       <div className="badge mb-3">
