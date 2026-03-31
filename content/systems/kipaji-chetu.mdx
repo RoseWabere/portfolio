@@ -1,0 +1,214 @@
+---
+title: "Kipaji Chetu — AI Adaptive Learning Platform"
+badge: "AI · EDTECH · DATA SYSTEMS"
+role: "AI Engineer & Backend Developer"
+description: "AI-powered personalized learning system with adaptive quizzes, real-time feedback, and teacher analytics. Built with FastAPI, PostgreSQL, and LLM integration."
+stack: ["FastAPI", "PostgreSQL", "SQLAlchemy", "Groq", "Edge-TTS", "JavaScript", "Docker"]
+liveUrl: "https://kipaji-chetu-learning.onrender.com"
+githubUrl: "https://github.com/RoseWabere/kipaji-chetu"
+featured: true
+impact: "Automated personalized learning and feedback system with adaptive difficulty and real-time analytics for students and teachers."
+image: "/images/projects/kipaji-chetu.png"
+---
+
+## Problem Context
+
+In many classrooms, especially in resource-constrained environments, teachers manage large groups of students with diverse learning abilities. Providing personalized attention, adaptive learning content, and timely feedback becomes nearly impossible.
+
+Most existing learning platforms focus on static content delivery and repetitive drills, which leads to:
+- Low student engagement over time
+- Limited personalization
+- Lack of actionable insights for teachers
+- Poor accessibility for learners with different needs
+
+**The core challenge:**  
+How do you build a system that adapts to each student’s learning pace, provides real-time feedback, and generates meaningful insights — all while remaining lightweight and accessible?
+
+---
+
+## System Architecture
+
+
+Student → FastAPI Backend → AI Engine (Groq) → PostgreSQL → Analytics → Response
+↓
+TTS / STT Layer
+
+
+**Core Components:**
+1. **Learning Engine:** Adaptive quiz generation and answer evaluation
+2. **AI Layer:** Generates questions, feedback, and simplified explanations
+3. **Database Layer:** Stores student performance, attempts, and analytics
+4. **Analytics Engine:** Tracks progress and identifies learning patterns
+5. **Accessibility Layer:** Text-to-speech and speech-to-text support
+6. **Frontend:** Lightweight HTML/JS interface for students and teachers
+
+---
+
+## Pipeline Breakdown
+
+### 1. Learning & Interaction Flow
+
+**Process:**
+```python
+Student → Request Question
+        → Backend Fetches / Generates Quiz
+        → Student Submits Answer
+        → AI Generates Feedback
+        → Data Stored in DB
+        → Difficulty Updated
+
+## Key Logic:
+
+Tracks last 5 attempts per student
+Calculates average performance
+Dynamically adjusts difficulty:
+≥ 80% → hard
+≤ 50% → easy
+otherwise → medium
+2. Database Design (PostgreSQL)
+
+### Core Tables:
+
+students
+topics
+quizzes
+quiz_attempts
+performance_logs
+ai_feedback_logs
+teachers
+classes
+class_students
+
+## Why PostgreSQL:
+
+Handles relational data efficiently
+Supports analytics queries
+Scalable beyond MVP
+3. AI Integration (Groq + Llama)
+
+## Capabilities:
+
+Generate quiz questions dynamically
+Provide instant feedback on answers
+Simplify explanations for accessibility mode
+
+Prompt Strategy:
+
+Structured JSON responses
+Context-aware question generation
+Difficulty-aware output
+4. Adaptive Learning Logic
+if avg_score >= 80:
+    difficulty = "hard"
+elif avg_score <= 50:
+    difficulty = "easy"
+else:
+    difficulty = "medium"
+
+### Impact:
+
+Prevents stagnation
+Keeps students challenged or supported
+Creates personalized learning paths
+5. Accessibility Layer
+
+### Implemented Features:
+
+Text-to-Speech (Edge-TTS)
+Speech-to-Text (Groq Whisper)
+Simplified explanations via AI
+
+Purpose:
+
+Support diverse learners
+Improve comprehension
+Enable inclusive learning experience
+Tech Decisions & Tradeoffs
+Decision 1: Groq vs OpenAI
+
+Chosen: Groq
+
+Faster inference
+Free tier availability
+Zero data retention
+
+Tradeoff:
+
+Slightly less ecosystem maturity than OpenAI
+Decision 2: FastAPI vs Flask
+
+Chosen: FastAPI
+
+Async support for AI calls
+Built-in OpenAPI docs
+Better performance under concurrency
+Decision 3: PostgreSQL vs SQLite
+
+Chosen: PostgreSQL
+
+Supports scaling
+Better for analytics queries
+Handles concurrent users
+Challenges & Solutions
+Challenge 1: Repetitive Questions
+
+Problem:
+Students received repeated questions frequently.
+
+Solution:
+
+Implemented unseen-question prioritization
+Added fallback generation via AI
+Introduced randomness in prompts
+Challenge 2: Inconsistent AI Output
+
+Problem:
+AI responses varied in format.
+
+Solution:
+
+Enforced JSON output structure
+Added strict prompt constraints
+Implemented parsing validation
+Challenge 3: Engagement Drop-off
+
+Problem:
+Basic quiz systems become monotonous.
+
+Solution:
+
+Introduced adaptive difficulty
+Real-time feedback loop
+Session-based progress tracking
+Output & Impact
+
+System Capabilities:
+
+Real-time adaptive learning
+Instant AI feedback
+Teacher performance insights
+Accessibility support (TTS/STT)
+
+Technical Metrics:
+
+Sub-2s average response time
+Async API handling concurrent requests
+Structured data logging for analytics
+Live Demo & Code
+
+Live: https://kipaji-chetu-learning.onrender.com
+
+GitHub: https://github.com/RoseWabere/kipaji-chetu
+
+## Key Files:
+
+/app/api/endpoints/submit_answer.py — Answer processing logic
+/app/automated/client.py — AI integration layer
+/app/models.py — Database schema
+/app/crud.py — Data operations
+What I Learned
+Adaptive systems outperform static content. Personalization significantly improves engagement and learning efficiency.
+AI must be controlled. Without structured prompts and validation, outputs become unreliable.
+Backend design matters in AI systems. Data flow and storage are as critical as model quality.
+Accessibility is not optional. Simple features like TTS dramatically improve usability.
+Real-time feedback changes behavior. Immediate explanations reinforce learning better than delayed results.
