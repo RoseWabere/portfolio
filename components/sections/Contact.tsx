@@ -103,7 +103,7 @@ export default function Contact() {
               </a>
 
               <a
-                href="https://github.com/Rozieroz"
+                href="https://github.com/RoseWabere"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full mb-4 p-4 border-2 border-border hover:border-primary-500 rounded-lg transition-all flex items-center gap-4 group"
@@ -113,7 +113,7 @@ export default function Contact() {
                 </div>
                 <div className="text-left flex-1">
                   <div className="text-sm font-medium text-text">GitHub</div>
-                  <div className="text-xs text-text-muted">github.com/Rozieroz</div>
+                  <div className="text-xs text-text-muted">github.com/RoseWabere</div>
                 </div>
                 <i className="fas fa-external-link-alt text-text-muted text-sm"></i>
               </a>

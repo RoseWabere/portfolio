@@ -16,7 +16,7 @@ export default function Footer() {
 
           <div className="flex gap-6">
             <a 
-              href="https://github.com/Rozieroz" 
+              href="https://github.com/RoseWabere" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-text-muted hover:text-primary-500 transition-colors"
