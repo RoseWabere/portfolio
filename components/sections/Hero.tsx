@@ -65,7 +65,7 @@ function FlowingParticles({ path, active }: any) {
    LINE
 ========================= */
 function AnimatedLine({ from, to, active }: any) {
-  const path = `M ${from.x} ${from.y} L ${to.x} ${to.y}`
+  const path = `M ${round(from.x)} ${round(from.y)} L ${round(to.x)} ${round(to.y)}`
 
   return (
     <>
@@ -85,6 +85,10 @@ function AnimatedLine({ from, to, active }: any) {
 /* =========================
    SYSTEM VISUAL
 ========================= */
+
+function round(num: number, decimals = 3) {
+  return Number(num.toFixed(decimals))
+}
 function SystemVisual() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
@@ -104,8 +108,8 @@ function SystemVisual() {
     const rad = (n.angle * Math.PI) / 180
     return {
       ...n,
-      x: center.x + radius * Math.cos(rad),
-      y: center.y + radius * Math.sin(rad),
+      x: round(center.x + radius * Math.cos(rad)),
+      y: round(center.y + radius * Math.sin(rad)),
     }
   })
 
@@ -148,8 +152,8 @@ function SystemVisual() {
           key={idx}
           icon={n.icon}
           label={n.label}
-          left={`${n.x}%`}
-          top={`${n.y}%`}
+          left={`${round(n.x)}%`}
+          top={`${round(n.y)}%`}
           active={activeIndex === idx}
           onHover={() => setActiveIndex(idx)}
         />
@@ -210,7 +214,7 @@ export default function Hero() {
             </div>
 
             <div className="flex flex-wrap gap-4 mb-8">
-              <Link href="#featured-work" className="btn-primary">
+              <Link href="#systems" className="btn-primary">
                 See Featured Work
               </Link>
               <Link href="#contact" className="btn-outline">

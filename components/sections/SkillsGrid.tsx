@@ -5,7 +5,7 @@ import { skills } from '@/lib/data'
 
 export default function SkillsGrid() {
   return (
-    <section className="py-24 section-white">
+    <section className="py-24 section-gray">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
