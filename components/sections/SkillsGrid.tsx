@@ -13,7 +13,7 @@ export default function SkillsGrid() {
           viewport={{ once: true }}
           className="mb-12 text-center"
         >
-          <div className="section-eyebrow">Technical Arsenal</div>
+          <div className="section-eyebrow">Technical Skills</div>
           <h2 className="font-display text-4xl font-bold mb-4">What I Bring to the Table</h2>
           <p className="text-text-muted text-lg max-w-2xl mx-auto">
             Production‑ready skills across the modern data stack.

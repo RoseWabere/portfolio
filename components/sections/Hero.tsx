@@ -174,13 +174,13 @@ export default function Hero() {
             transition={{ duration: 0.6 }}
           >
             <div className="section-eyebrow">
-              Investigative Data Engineer
+              Data & AI Systems Engineer | Compliance-Aware Architecture
             </div>
 
             <h1 className="font-display font-bold mb-6 text-balance">
-              I build{' '}
+              Building production{' '}
               <span className="text-primary">
-                real-time, auditable data & AI systems
+                ETL pipelines, RAG systems, and governance-first data platforms
               </span>{' '}
               that drive decisions
             </h1>
@@ -190,7 +190,8 @@ export default function Hero() {
                 I’m Rose Wabere, a production-minded data engineer designing
                 end-to-end intelligent systems. From ETL pipelines to RAG AI
                 assistants, I solve real business problems with clean architecture
-                and measurable impact. Based in Nairobi, Kenya.
+                and measurable impact. Currently at Data Science East Africa | Open 
+                to Senior Data Engineering Roles | Nairobi/Remote.
               </p>
             </div>
 
