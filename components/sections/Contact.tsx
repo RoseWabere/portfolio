@@ -7,7 +7,7 @@ export default function Contact() {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
 
   const handleWhatsApp = () => {
-    const parts = ['2547', '00000', '000'] // replace with your real number
+    const parts = ['2547', '08486', '104'] // replace with your real number
     window.open(
       `https://wa.me/${parts.join('')}?text=Hello%20Data%20Scout%20KE%2C%20I%27d%20like%20to%20discuss%20a%20project.`,
       '_blank'
