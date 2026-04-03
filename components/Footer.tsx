@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="text-center md:text-left">
             <h3 className="font-display text-xl font-bold mb-2">Rose Wabere</h3>
             <p className="text-text-muted text-sm">
-              Data Engineer · Nairobi, Kenya · Founder, Data Scout KE
+              Data Engineer · Nairobi, Kenya · Founder, Data Scout KE - Data Engineering Consultancy
             </p>
           </div>
 

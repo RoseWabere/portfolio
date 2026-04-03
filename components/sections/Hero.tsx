@@ -171,51 +171,56 @@ export default function Hero() {
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-          {/* LEFT CONTENT — now with recruiter-focused hooks */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Availability Badge */}
+            {/* Status badge – confident framing */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full mb-6">
-              {/* <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> */}
-              <span className="text-emerald-700 font-semibold text-sm">
-                Available for Data Engineer/ Analyst roles | Immediate start
+              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+              <span className="text-emerald-700 font-medium text-sm">
+                Currently accepting engagements – Data Engineering · AI Systems · Analytics Infrastructure
               </span>
             </div>
 
-            {/* Unique Value Proposition */}
-            <div className="section-eyebrow">
-              Data & AI Systems Engineer
-            </div>
-
+            {/* No confusing tagline – straight to value */}
             <h1 className="font-display font-bold mb-6 text-balance">
-              I build <span className="text-primary">governance‑aware data systems</span> for African enterprises
+              I engineer data systems that work under pressure –{' '}
+              <span className="text-primary">
+                production ETL pipelines, governance‑aware analytics, and AI applications built for industries where accuracy isn‘t optional.
+              </span>
             </h1>
 
-            <p className="text-xl text-text-muted mb-4 leading-relaxed">
-              Rare combination: Production data engineering + criminology background = 
-              compliance‑ready ETL pipelines and AI systems from day one.
+            <p className="text-xl text-text-muted mb-6 leading-relaxed">
+              Python · dbt · Airflow · LangChain · RAG · FastAPI – available for remote and hybrid engagements globally.
             </p>
 
-            {/* Impact Metrics — quantified results */}
+            {/* Brief differentiator – the moat */}
+            <div className="mb-8 p-4 bg-primary/5 border-l-4 border-primary rounded-r-lg">
+              <p className="text-text-muted">
+                <span className="font-semibold text-text">Rare combination:</span> Data engineering depth + criminology/investigative thinking. 
+                I build systems that are accurate, auditable, and built to withstand scrutiny – ideal for fintech, govtech, compliance, and regulated industries.
+              </p>
+            </div>
+
+            {/* Impact metrics – more specific */}
             <div className="grid grid-cols-3 gap-6 mb-8 pt-4 border-t border-border">
               <div>
-                <div className="text-4xl font-display font-bold text-primary">95%</div>
-                <div className="text-sm text-text-muted mt-1">Faster Compliance Reporting</div>
-              </div>
-              <div>
                 <div className="text-4xl font-display font-bold text-primary">8+</div>
-                <div className="text-sm text-text-muted mt-1">Production Systems Deployed</div>
+                <div className="text-sm text-text-muted mt-1">Production Systems</div>
               </div>
               <div>
-                <div className="text-4xl font-display font-bold text-primary">4yr</div>
-                <div className="text-sm text-text-muted mt-1">Building in Africa</div>
+                <div className="text-4xl font-display font-bold text-primary">95%</div>
+                <div className="text-sm text-text-muted mt-1">Compliance Time Saved</div>
+              </div>
+              <div>
+                <div className="text-4xl font-display font-bold text-primary">6</div>
+                <div className="text-sm text-text-muted mt-1">Industries Served</div>
               </div>
             </div>
 
-            {/* CTA Buttons — prioritise calendar booking */}
+            {/* CTAs – Calendly first */}
             <div className="flex flex-wrap gap-4 mb-8">
               <a
                 href="https://calendly.com/rosewabere/30min"
@@ -237,7 +242,7 @@ export default function Hero() {
               </a>
             </div>
 
-            {/* Tech stack badges – kept as is */}
+            {/* Tech stack – curated, not a dump */}
             <div className="flex flex-wrap gap-2">
               {['Python','SQL','PySpark','dbt','Airflow','LangChain','FastAPI','PostgreSQL','Kafka'].map(tech => (
                 <span key={tech} className="badge">{tech}</span>
@@ -245,7 +250,7 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* RIGHT VISUAL — unchanged */}
+          {/* Right visual – unchanged */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}

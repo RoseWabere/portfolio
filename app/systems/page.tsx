@@ -1,3 +1,5 @@
+// app/systems/page.tsx
+
 import { getAllSystems, categorizeSystem } from '@/lib/systems'
 import SystemCard from '@/components/SystemCard'
 import type { Metadata } from 'next'
@@ -8,7 +10,11 @@ export const metadata: Metadata = {
 }
 
 export default function SystemsPage() {
-  const systems = getAllSystems()  // gets all systems from MDX
+  const allSystems = getAllSystems()
+  
+  // Separate data/AI systems from frontend projects
+  const dataSystems = allSystems.filter(s => s.type !== 'frontend')
+  const frontendProjects = allSystems.filter(s => s.type === 'frontend')
 
   return (
     <div className="min-h-screen pt-32 pb-24">
@@ -30,22 +36,34 @@ export default function SystemsPage() {
           </p>
         </div>
 
-        {/* All Systems Grid – no separation into featured/other */}
-        {systems.length > 0 ? (
+        {/* Data & AI Systems Grid */}
+        {dataSystems.length > 0 && (
           <div className="mb-20">
+            <h2 className="font-display text-3xl font-bold mb-8">Data & AI Systems</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {systems.map((system, index) => (
+              {dataSystems.map((system, index) => (
                 <SystemCard key={system.slug} system={system} index={index} />
               ))}
             </div>
           </div>
-        ) : (
-          <div className="p-12 text-center border border-border rounded-xl">
-            <p className="text-text-muted">No systems found. Add MDX files to <code className="bg-surface px-2 py-1 rounded">content/systems/</code>.</p>
+        )}
+
+        {/* Frontend / Web Applications Grid (separate, no "learning" label) */}
+        {frontendProjects.length > 0 && (
+          <div className="mb-20">
+            <h2 className="font-display text-3xl font-bold mb-8">Web Applications</h2>
+            <p className="text-text-muted mb-6 max-w-2xl">
+              Full‑stack applications demonstrating frontend development, API integration, and user‑focused design.
+            </p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {frontendProjects.map((system, index) => (
+                <SystemCard key={system.slug} system={system} index={index} />
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Categories Overview – stays as before */}
+        {/* Categories Overview – unchanged, but note: it counts all systems including frontend */}
         <div className="mt-20 p-8 bg-white/5 border border-white/10 rounded-xl">
           <h3 className="font-display text-2xl font-bold mb-4">System Categories</h3>
           <p className="text-text-muted mb-6">
@@ -53,7 +71,7 @@ export default function SystemsPage() {
           </p>
           <div className="grid md:grid-cols-3 gap-4">
             {['AI & ML', 'Data Engineering', 'Real-time', 'Analytics', 'Geospatial'].map(category => {
-              const count = systems.filter(s => 
+              const count = allSystems.filter(s => 
                 categorizeSystem(s).includes(category)
               ).length
               

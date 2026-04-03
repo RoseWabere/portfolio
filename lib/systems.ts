@@ -25,6 +25,8 @@ export interface System {
   architecture?: string
   engineering?: string
   content?: string
+
+   type?: string     
 }
 
 const systemsDirectory = path.join(process.cwd(), 'content/systems')
@@ -42,6 +44,7 @@ export function getAllSystemSlugs(): string[] {
     return files
       .filter(file => file.endsWith('.mdx'))
       .map(file => file.replace(/\.mdx$/, ''))
+      
   } catch (error) {
     console.error('Error reading systems directory:', error)
     return []
@@ -76,6 +79,8 @@ export function getSystemBySlug(slug: string): System | null {
       solution: data.solution,
       architecture: data.architecture,
       engineering: data.engineering,
+
+      type: data.type || 'data', // default to 'data' if not specified
     }
   } catch (error) {
     console.error(`Error reading system ${slug}:`, error)
