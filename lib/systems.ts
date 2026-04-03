@@ -19,6 +19,9 @@ export interface System {
   featured: boolean
   impact: string
   image?: string
+  
+  architecture?: string
+  engineering?: string
   content?: string
 }
 

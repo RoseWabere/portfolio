@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function HireMe() {
   return (
-    <section className="py-16 section-gray">
+    <section className="py-16 section-white">
       <div className="container mx-auto px-6 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

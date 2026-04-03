@@ -13,7 +13,7 @@ export default function SystemsShowcase({ systems }: SystemsShowcaseProps) {
   if (!systems || systems.length === 0) return null
 
   return (
-    <section id="systems" className="py-24 section-white">
+    <section id="systems" className="py-24 section-gray">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

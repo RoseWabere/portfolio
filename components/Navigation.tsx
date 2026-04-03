@@ -32,7 +32,7 @@ export default function Navigation() {
             Education
           </Link>
           <Link href="/#systems" className="text-text-muted hover:text-text transition-colors text-sm font-medium">
-            Systems
+            Projects
           </Link>
           <Link href="/#blog" className="text-text-muted hover:text-text transition-colors text-sm font-medium">
             Blog
@@ -45,6 +45,9 @@ export default function Navigation() {
         {/* Right Side Actions */}
         <div className="flex items-center gap-3">
           <ThemeToggle />
+          <a href="#contact" className="hidden md:flex px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
+            Hire Me
+          </a>
           
           {/* WhatsApp - Desktop only */}
           <a

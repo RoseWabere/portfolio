@@ -171,88 +171,81 @@ export default function Hero() {
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
 
-          {/* LEFT CONTENT — full professional info */}
+          {/* LEFT CONTENT — now with recruiter-focused hooks */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
+            {/* Availability Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-200 rounded-full mb-6">
+              {/* <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> */}
+              <span className="text-emerald-700 font-semibold text-sm">
+                Available for Data Engineer/ Analyst roles | Immediate start
+              </span>
+            </div>
+
+            {/* Unique Value Proposition */}
             <div className="section-eyebrow">
-              Data & AI Systems Engineer | Compliance-Aware Architecture
+              Data & AI Systems Engineer
             </div>
 
             <h1 className="font-display font-bold mb-6 text-balance">
-              Building production{' '}
-              <span className="text-primary">
-                ETL pipelines, RAG systems, and governance-first data platforms
-              </span>{' '}
-              that drive decisions
+              I build <span className="text-primary">governance‑aware data systems</span> for African enterprises
             </h1>
 
-            <div className="mb-6 p-4 bg-primary/5 border-l-4 border-primary rounded-r-lg">
-              <p className="text-text-muted leading-relaxed">
-                I’m Rose Wabere, a production-minded data engineer designing
-                end-to-end intelligent systems. From ETL pipelines to RAG AI
-                assistants, I solve real business problems with clean architecture
-                and measurable impact. Currently at Data Science East Africa | Open 
-                to Senior Data Engineering Roles | Nairobi/Remote.
-              </p>
-            </div>
-
-            <p className="text-xl text-text-muted mb-8 leading-relaxed-plus">
-              From data ingestion to decision interfaces; building scalable ETL,
-              real-time analytics, and AI-powered systems.
+            <p className="text-xl text-text-muted mb-4 leading-relaxed">
+              Rare combination: Production data engineering + criminology background = 
+              compliance‑ready ETL pipelines and AI systems from day one.
             </p>
 
-            <div className="flex flex-wrap gap-2 mb-8">
-              {[
-                'Python','SQL','PySpark','dbt','Airflow',
-                'LangChain','FastAPI','PostgreSQL','Kafka',
-              ].map((tech) => (
-                <span key={tech} className="badge">{tech}</span>
-              ))}
+            {/* Impact Metrics — quantified results */}
+            <div className="grid grid-cols-3 gap-6 mb-8 pt-4 border-t border-border">
+              <div>
+                <div className="text-4xl font-display font-bold text-primary">95%</div>
+                <div className="text-sm text-text-muted mt-1">Faster Compliance Reporting</div>
+              </div>
+              <div>
+                <div className="text-4xl font-display font-bold text-primary">8+</div>
+                <div className="text-sm text-text-muted mt-1">Production Systems Deployed</div>
+              </div>
+              <div>
+                <div className="text-4xl font-display font-bold text-primary">4yr</div>
+                <div className="text-sm text-text-muted mt-1">Building in Africa</div>
+              </div>
             </div>
 
+            {/* CTA Buttons — prioritise calendar booking */}
             <div className="flex flex-wrap gap-4 mb-8">
-              <Link href="#systems" className="btn-primary">
-                See Featured Work
-              </Link>
+              <a
+                href="https://calendly.com/rosewabere/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary flex items-center gap-2"
+              >
+                <i className="fas fa-calendar-check"></i> Book 30‑min Call
+              </a>
               <Link href="#contact" className="btn-outline">
                 Hire Me
               </Link>
-              <a href="/Rose_Wabere_CV.pdf" download className="btn-outline flex items-center gap-2">
+              <a
+                href="/Rose_Wabere_DataGovernance_Resume.pdf"
+                download
+                className="btn-outline flex items-center gap-2"
+              >
                 <i className="fas fa-download"></i> Download CV
               </a>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="pt-8 border-t border-border grid grid-cols-3 gap-6"
-            >
-              <div>
-                <div className="text-4xl font-display font-bold">8+</div>
-                <div className="text-sm text-text-muted mt-1">
-                  Production Systems
-                </div>
-              </div>
-              <div>
-                <div className="text-4xl font-display font-bold">4+</div>
-                <div className="text-sm text-text-muted mt-1">
-                  Years Experience
-                </div>
-              </div>
-              <div>
-                <div className="text-4xl font-display font-bold">3</div>
-                <div className="text-sm text-text-muted mt-1">
-                  Fintech · Civic Tech · Environmental
-                </div>
-              </div>
-            </motion.div>
+            {/* Tech stack badges – kept as is */}
+            <div className="flex flex-wrap gap-2">
+              {['Python','SQL','PySpark','dbt','Airflow','LangChain','FastAPI','PostgreSQL','Kafka'].map(tech => (
+                <span key={tech} className="badge">{tech}</span>
+              ))}
+            </div>
           </motion.div>
 
-          {/* RIGHT VISUAL — calm, premium animation */}
+          {/* RIGHT VISUAL — unchanged */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
