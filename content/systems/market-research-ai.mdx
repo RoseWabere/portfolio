@@ -9,18 +9,37 @@ featured: false
 impact: "60% reduction in market research time"
 image: "/images/projects/market_research_ai.png"
 
-problem: "Travelers spent 10+ hours researching Kenya safaris"
-solution: "Built RAG pipeline with 94% retrieval accuracy"
-architecture: "User Query → Router → Vector DB → LLM → Response"
-engineering: "Hybrid search, query enhancement, streaming, Redis cache"
+problem: |
+  Gaming and retail clients spend 20+ hours per 
+  research cycle manually reading market reports, with no 
+  way to query across documents or surface emerging trends 
+  at scale.
 
+solution: |
+  Built a LangChain + OpenAI Function Calling 
+  pipeline processing 1,000+ market research documents — 
+  PDF parsing, embeddings, NLP extraction — enabling 
+  conversational querying across the full corpus. Automated 
+  keyword analysis cut client research time by 60% and 
+  identified 12 new market niches.
+
+architecture: |
+  Document Corpus (PDFs + Web) → 
+  Chunking + Embedding → Vector Store → LangChain Agent 
+  → OpenAI Function Calls → Structured Insight Reports
+
+engineering: |
+  OpenAI Function Calling for 
+  structured output extraction; document embedding pipeline 
+  with semantic chunking; automated niche detection via 
+  keyword clustering; FastAPI deployment for client access.
 ---
 
 ## Overview
 
 An AI assistant that analyzes market reports and identifies emerging niches. It uses LangChain to chain document parsing, entity extraction, and niche identification, then generates actionable insights.
 
-## Architecture
+## System Architecture
 
 - **Document Ingestion:** PDF and DOCX parsing
 - **Chunking:** 1,000-token chunks with overlap

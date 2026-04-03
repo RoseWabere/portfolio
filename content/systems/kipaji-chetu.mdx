@@ -10,11 +10,31 @@ featured: true
 impact: "Automated personalized learning and feedback system with adaptive difficulty and real-time analytics for students and teachers."
 image: "/images/projects/kipaji-chetu.png"
 
-problem: "Travelers spent 10+ hours researching Kenya safaris"
-solution: "Built RAG pipeline with 94% retrieval accuracy"
-architecture: "User Query → Router → Vector DB → LLM → Response"
-engineering: "Hybrid search, query enhancement, streaming, Redis cache"
+problem: |
+  Teachers in under-resourced schools have no 
+  scalable tool to deliver personalized assessments -
+  every student received the same quiz regardless of 
+  performance level, and feedback was slow and manual.
 
+solution: |
+  Built a production async FastAPI backend with 
+  PostgreSQL schema supporting adaptive quiz 
+  generation calibrated to each student's real-time 
+  performance. Integrated Groq LLM for instant personalized 
+  feedback per answer. Accessibility-first: full 
+  voice-input (Whisper STT) and audio output (Edge-TTS) stack.
+
+architecture: |
+  Student Attempt → Performance Log → 
+  Groq Adaptive Engine → Next Question + LLM Feedback → 
+  Teacher Analytics Dashboard
+
+engineering: |
+  Adaptive difficulty algorithm 
+  adjusting question level per attempt; real-time teacher 
+  dashboard with heatmaps identifying struggling students; 
+  full accessibility stack (STT + TTS); all API endpoints 
+  tested and documented.
 ---
 
 ## Problem Context

@@ -9,18 +9,35 @@ featured: true
 impact: "Automated job search across 7 platforms. Real-time notifications."
 image: "/images/projects/jobscout-ke.png"
 
-problem: "Travelers spent 10+ hours researching Kenya safaris"
-solution: "Built RAG pipeline with 94% retrieval accuracy"
-architecture: "User Query → Router → Vector DB → LLM → Response"
-engineering: "Hybrid search, query enhancement, streaming, Redis cache"
+problem: |
+  Job seekers manually checking 7+ platforms daily 
+  missed time-sensitive postings — the fragmented job market 
+  meant relevant roles expired before candidates found them.
 
+solution: |
+  Built a fully automated multi-source job 
+  aggregation system using Playwright browser automation, 
+  Jooble API, and Gmail API. Groq LLaMA scores job relevance 
+  and filters noise. Telegram bot delivers real-time 
+  personalized alerts.
+
+architecture: |
+  Playwright Scraper + Jooble API → 
+  SQLite Deduplication Layer → Groq LLaMA Relevance Scorer 
+  → Telegram Bot Notification → Gmail Digest
+
+engineering: |
+  Multi-source deduplication 
+  preventing repeat alerts; LLM-powered relevance scoring 
+  against a target profile; Telegram + email dual delivery; 
+  fully headless, scheduled pipeline.
 ---
 
 ## Overview
 
 A tool that aggregates job listings from multiple Kenyan job boards, filters them based on user preferences, and sends real-time notifications via Telegram.
 
-## Architecture
+## System Architecture
 
 - **Scraping:** Playwright for dynamic sites, REST APIs where available
 - **Aggregation:** Python backend with SQLite storage

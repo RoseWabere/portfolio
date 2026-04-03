@@ -10,18 +10,36 @@ impact: "Processing 100+ daily seismic events globally"
 image: "/images/projects/earthquake-pipeline.png"
 
 
-problem: "Travelers spent 10+ hours researching Kenya safaris"
-solution: "Built RAG pipeline with 94% retrieval accuracy"
-architecture: "User Query → Router → Vector DB → LLM → Response"
-engineering: "Hybrid search, query enhancement, streaming, Redis cache"
+problem: |
+  A client lacked accessible, real-time dashboard existed for 
+  monitoring and visualizing global seismic events with 
+  automated data refresh: existing tools were either 
+  manual or required expensive subscriptions.
 
+solution: |
+  Built an end-to-end Python ETL pipeline 
+  extracting live earthquake data from the USGS API, 
+  loading it into PostgreSQL via SQLAlchemy, and 
+  orchestrating automated refreshes with Apache Airflow. 
+  Delivered live Grafana monitoring dashboard.
+
+architecture: |
+  USGS API → Python Extraction → Pandas 
+  Transformation → SQLAlchemy → PostgreSQL → 
+  Airflow DAG (scheduled) → Grafana Dashboard
+
+engineering : |
+  Automated Airflow DAG with 
+  failure alerting; idempotent pipeline design preventing 
+  duplicate ingestion; currently processing 100+ daily 
+  seismic events globally.
 ---
 
 ## Overview
 
 A real-time data pipeline that ingests earthquake data from the USGS API, transforms it, and loads it into PostgreSQL. The data is visualized in Grafana dashboards for seismic activity monitoring.
 
-## Architecture
+## System Architecture
 
 - **Ingestion:** Python script fetching USGS GeoJSON every 5 minutes
 - **Orchestration:** Apache Airflow DAG for scheduling and monitoring

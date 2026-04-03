@@ -9,9 +9,30 @@ githubUrl: "https://github.com/RoseWabere/Travel-Assistant"
 featured: true
 impact: "Reduced travel research time by 70%. Processed 2,000+ curated experiences with 94% retrieval accuracy."
 image: "/images/projects/safari-scout.png"
-architecture: 'User Query → LangChain Router → Weaviate Vector DB → LLM Synthesis → Structured Response'
-engineering: 'Hybrid search (semantic + keyword), query enhancement (budget, location), streaming responses, Redis caching.'
 
+problem: |
+  Travelers planning Kenya safaris spend 10+ hours 
+  manually researching across dozens of fragmented sources,
+  booking sites, travel blogs, forums, with no single 
+  reliable, conversational interface.
+
+solution: |
+  Built a production RAG pipeline ingesting 500+ 
+  curated travel documents (PDFs, web scrapes) into a 
+  Weaviate vector database, enabling semantic search with 
+  hybrid retrieval and LangChain orchestration. Achieved 
+  94% retrieval accuracy with sub-3-second response times.
+
+architecture: |
+  User Query → Query Enhancer → Hybrid Search 
+  (Vector + BM25) → Weaviate → LangChain LLM Chain → 
+  Streamed Response
+
+engineering: |
+  Hybrid search combining vector 
+  similarity + keyword scoring; query enhancement preprocessing; 
+  Redis caching for repeated queries; async FastAPI backend 
+  with streaming; Next.js frontend deployment on Vercel.
 
 ---
 

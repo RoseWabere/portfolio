@@ -9,18 +9,37 @@ impact: "95% reduction in manual compliance reporting"
 image: "/images/projects/bank-compliance.png"
 
 
-problem: "Travelers spent 10+ hours researching Kenya safaris"
-solution: "Built RAG pipeline with 94% retrieval accuracy"
-architecture: "User Query → Router → Vector DB → LLM → Response"
-engineering: "Hybrid search, query enhancement, streaming, Redis cache"
+problem: |
+  A Kenyan financial institution's compliance team 
+  spends 40+ hours monthly manually producing regulatory 
+  reports across fragmented data sources, with no automated 
+  alerting when KPIs approached breach thresholds.
 
+solution: |
+  Built a dbt-powered transformation layer over 
+  a PostgreSQL data warehouse, producing audit-ready, 
+  lineage-tracked datasets. Delivered Power BI dashboards 
+  with automated alerting for regulatory threshold breaches, 
+  reducing manual reporting effort by 95%.
+
+architecture: |
+  Raw Transactional Data → dbt Models 
+  (Staging → Intermediate → Mart) → PostgreSQL DWH → 
+  Power BI Semantic Layer → Compliance Dashboard + Alerts
+
+engineering: |
+  Full dbt lineage documentation; 
+  compliance-aware data handling and audit trail design; 
+  automated alert logic for regulatory KPI monitoring; 
+  governance-first data modeling shaped by criminology 
+  background in evidentiary standards.
 ---
 
 ## Overview
 
 A compliance dashboard for a Kenyan bank that automates the monitoring of regulatory requirements (e.g., CBK guidelines). It uses dbt for data transformations and Power BI for visualization.
 
-## Architecture
+## System Architecture
 
 - **Data Warehouse:** PostgreSQL with star schema
 - **Transformations:** dbt models for compliance metrics

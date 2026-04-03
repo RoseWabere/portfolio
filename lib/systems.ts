@@ -13,6 +13,8 @@ export interface System {
   badge: string
   role: string
   description: string
+  problem?: string
+  solution?: string
   stack: string[]
   liveUrl?: string
   githubUrl?: string
@@ -69,6 +71,11 @@ export function getSystemBySlug(slug: string): System | null {
       impact: data.impact,
       image: data.image,           
       content,
+
+      problem: data.problem,
+      solution: data.solution,
+      architecture: data.architecture,
+      engineering: data.engineering,
     }
   } catch (error) {
     console.error(`Error reading system ${slug}:`, error)

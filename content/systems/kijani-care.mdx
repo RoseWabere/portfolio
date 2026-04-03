@@ -10,18 +10,38 @@ featured: true
 impact: "Monitoring 10K+ environmental records in real-time"
 image: "/images/projects/kijani-care.png"
 
-problem: "Travelers spent 10+ hours researching Kenya safaris"
-solution: "Built RAG pipeline with 94% retrieval accuracy"
-architecture: "User Query → Router → Vector DB → LLM → Response"
-engineering: "Hybrid search, query enhancement, streaming, Redis cache"
 
+problem: |
+  Environmental NGOs and field teams tracking tree 
+  planting initiatives across Kenya had no centralized, 
+  real-time system to monitor survival rates, regional 
+  suitability, or impact metrics — leading to delayed 
+  reporting and duplicate field work.
+
+solution: |
+  Engineered a full geospatial ETL pipeline 
+  ingesting environmental and GPS data into a PostGIS-enabled 
+  PostgreSQL database, with a FastAPI backend serving live 
+  analytics to a React dashboard. Currently monitoring 10,000+ 
+  planting records in real time.
+
+architecture: |
+  Field Input / CSV Upload → ETL Ingest → 
+  PostGIS PostgreSQL → FastAPI Analytics API → React Dashboard
+
+engineering highlights: |
+  PostGIS geospatial queries for 
+  regional suitability scoring; Docker containerization for 
+  portable deployment; automated ETL refresh ensuring 
+  always-current analytics; LangChain/Groq AI integration 
+  for field recommendations.
 ---
 
 ## Overview
 
 Kijani Care 360 is an environmental monitoring platform that tracks tree planting initiatives across Kenya. It ingests data from field teams, processes it through a geospatial ETL pipeline, and visualizes it in real-time dashboards.
 
-## Architecture
+## System Architecture
 
 - **Data Sources:** Mobile forms, CSV uploads, satellite imagery
 - **ETL:** Python scripts with PostGIS geospatial transformations

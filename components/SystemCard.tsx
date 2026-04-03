@@ -26,7 +26,7 @@ interface SystemCardProps {
 
 export default function SystemCard({ system, index }: SystemCardProps) {
   // If problem is not defined in MDX, we can generate a fallback from description
-  const problem = system.problem || `Users needed ${system.title.toLowerCase()} but faced inefficiencies.`
+  const problem = system.problem //|| `Users needed ${system.title.toLowerCase()} but faced inefficiencies.`
   const solution = system.description
 
   return (

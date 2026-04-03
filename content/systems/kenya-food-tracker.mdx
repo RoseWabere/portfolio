@@ -9,18 +9,35 @@ featured: false
 impact: "Tracking price trends across 50+ food categories"
 image: "/images/projects/kenya-food-tracker.png"
 
-problem: "Travelers spent 10+ hours researching Kenya safaris"
-solution: "Built RAG pipeline with 94% retrieval accuracy"
-architecture: "User Query → Router → Vector DB → LLM → Response"
-engineering: "Hybrid search, query enhancement, streaming, Redis cache"
+problem: |
+  Economists and policymakers tracking food inflation 
+  in Kenya have no automated, pipeline combining 
+  price scraping, cleaning, and forecasting in a single 
+  system, analysis is often manual and weeks/ months behind.
 
+solution: |
+  Built a PySpark scraping and transformation 
+  pipeline aggregating food price data nationwide, feeding 
+  time-series forecasting models and live Grafana economic 
+  intelligence dashboards tracking 50+ food categories.
+
+architecture: |
+  Web Scraping (Requests) → PySpark 
+  Transformation → PostgreSQL → Time-Series Forecasting 
+  (Pandas/Statsmodels) → Grafana Real-Time Dashboard
+
+engineering: |
+  PySpark distributed processing 
+  for scale; automated inflation trend detection; Grafana 
+  alerting on category-level price spikes; open-source 
+  civic data infrastructure usable by researchers and journalists.
 ---
 
 ## Overview
 
 A data pipeline that scrapes food prices from Kenyan e-commerce sites and government reports, processes them with PySpark, and visualizes inflation trends in Grafana.
 
-## Architecture
+## System Architecture
 
 - **Scraping:** Python with BeautifulSoup/Scrapy
 - **Processing:** PySpark for aggregation and anomaly detection

@@ -58,54 +58,80 @@ export const education = [
   {
     id: 1,
     institution: 'Mount Kenya University',
-    degree: 'Bachelor of Arts in Security Studies and Criminology',
+    degree: 'B.A. Security Studies & Criminology',
     location: 'Nairobi, Kenya',
     startDate: '2022',
     endDate: '2025',
-    description: 'Specialized in security analysis, criminology, and governance frameworks — background that informs governance-aware data system design.',
+    description: `Relevant Foundation: Trained in evidence-based reasoning, 
+      behavioral pattern analysis, investigative methodology, 
+      and structured argumentation — disciplines that directly 
+      shape how I approach data quality, anomaly detection, 
+      and governance-aware system design. Applied analytical 
+      frameworks from criminology to data pipeline validation, 
+      fraud pattern detection, and compliance reporting`,
   },
-   {
-    id: 2,
-    institution: 'University of Nairobi',
-    degree: 'Diploma in Criminology and Social Order',
-    location: 'Nairobi, Kenya',
-    startDate: '2020',
-    endDate: '2021',
+  //  {
+  //   id: 2,
+  //   institution: 'University of Nairobi',
+  //   degree: 'Diploma in Criminology and Social Order',
+  //   location: 'Nairobi, Kenya',
+  //   startDate: '2020',
+  //   endDate: '2021',
     // description: 'Specialized in security analysis, criminology, and governance frameworks — background that informs governance-aware data system design.',
-  },
-   {
-    id: 3,
-    institution: 'Co-operative University of Kenya',
-    degree: 'Diploma in Microfinance',
-    location: 'Nairobi, Kenya',
-    startDate: '2018',
-    endDate: '2019',
-    // description: 'Specialized in security analysis, criminology, and governance frameworks — background that informs governance-aware data system design.',
-  },
+  // },
+  //  {
+  //   id: 3,
+  //   institution: 'Co-operative University of Kenya',
+  //   degree: 'Diploma in Microfinance',
+  //   location: 'Nairobi, Kenya',
+  //   startDate: '2018',
+  //   endDate: '2019',
+  //   // description: 'Specialized in security analysis, criminology, and governance frameworks — background that informs governance-aware data system design.',
+  // },
 ]
 
 export const certifications = [
   {
     id: 1,
-    name: 'Data Science, Analytics and AI',
+    name: 'Data Engineering, Data Science, Analytics and AI',
     issuer: 'LuxDevHQ',
     date: '2025',
-    description: 'Advanced ETL pipeline design, data warehousing, and orchestration',
+    description: 'Comprehensive curriculum covering Airflow, Kafka, Cloud Computing, Python, SQL, machine learning, and production AI system design.',
   },
   {
     id: 2,
-    name: 'Mediation and Conflict Resolution',
-    issuer: 'Peacecum Mediation Center',
+    name: 'Software Development',
+    issuer: 'Women Techsters Initiative',
     date: '2023',
-    description: 'ML algorithms, model deployment, and production systems',
+    description: 'Foundations of full-stack development, backend APIs, and deployment workflows.',
   },
   {
     id: 3,
-    name: 'Python for Data Science',
-    issuer: 'Online Learning Platform',
-    date: '2021',
-    description: 'Advanced Python, Pandas, NumPy, and data analysis',
-  }
+    name: 'Cybersecurity Fundamentals',
+    issuer: 'Women Techsters Initiative',
+    date: '2023',
+    description: 'Security-aware development practices, threat modeling, data privacy, and secure API design.',
+  },
+  {
+    id: 4,
+    name: 'Green Digital Skills',
+    issuer: 'INCO Academy',
+    date: '2023',
+    description: 'Sustainability-focused digital innovation and tech-for-impact frameworks.',
+  },
+  {
+    id: 5,
+    description: `Self-Directed Technical Depth (Ongoing): Apache Airflow, dbt, LangChain, vector databases (Weaviate), 
+      MLOps patterns, FastAPI, Docker, cloud deployment (GCP/AWS/Vercel) — validated through production projects, not just coursework.`,
+  },
+  {
+    id: 6,
+    name: 'Mediation and Conflict Resolution',
+    issuer: 'Peacecum Mediation Center',
+    date: '2023',
+    description: 'Mediation and Negotiation, Peacebuilding, and negotiation skills that enhance stakeholder management and cross-functional collaboration,',
+  },
+  
 ]
 
 // export const skills = {
