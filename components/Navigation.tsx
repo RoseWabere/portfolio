@@ -25,10 +25,10 @@ export default function Navigation() {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-6">
-          <Link href="/#experience" className="text-text-muted hover:text-text transition-colors text-sm font-medium">
+          <Link href="/experience" className="text-text-muted hover:text-text transition-colors text-sm font-medium">
             Experience
           </Link>
-          <Link href="/#education" className="text-text-muted hover:text-text transition-colors text-sm font-medium">
+          <Link href="/education" className="text-text-muted hover:text-text transition-colors text-sm font-medium">
             Education
           </Link>
           <Link href="/#systems" className="text-text-muted hover:text-text transition-colors text-sm font-medium">
