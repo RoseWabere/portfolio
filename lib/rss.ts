@@ -27,6 +27,7 @@ export async function getMediumPosts(): Promise<BlogPost[]> {
     const feed = await parser.parseURL(mediumRSS)
     
     return feed.items.map(item => ({
+      image: item['media:content']?.url || '',
       title: item.title || '',
       link: item.link || '',
       pubDate: item.pubDate || '',
@@ -64,6 +65,7 @@ export async function getDevToPosts(): Promise<BlogPost[]> {
     const articles = await response.json()
     
     return articles.map((article: any) => ({
+      image: article.cover_image || '',
       title: article.title,
       link: article.url,
       pubDate: article.published_at,

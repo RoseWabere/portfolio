@@ -4,7 +4,7 @@ import CompactExperience from '@/components/sections/CompactExperience'
 import EducationSummary from '@/components/sections/EducationSummary'
 import SystemsShowcase from '@/components/sections/SystemsShowcase'
 import WhyDifferent from '@/components/sections/WhyDifferent'
-import LeadMagnet from '@/components/sections/LeadMagnet'
+// import LeadMagnet from '@/components/sections/LeadMagnet'
 import HireMe from '@/components/sections/HireMe'
 import BlogSection from '@/components/sections/BlogSection'
 import Contact from '@/components/sections/Contact'
@@ -21,7 +21,7 @@ export default async function Home() {
       <SystemsShowcase systems={featuredSystems} />  {/* flagship work high up */}
       <CompactExperience />          {/* compact, not overwhelming */}
       <EducationSummary />           {/* one-liner + cert badges */}
-      <LeadMagnet />
+      {/* <LeadMagnet /> */}
       <HireMe />
       <BlogSection />
       <Contact />
