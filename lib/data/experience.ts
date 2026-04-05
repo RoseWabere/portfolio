@@ -30,13 +30,13 @@ export const experience = [
       'Architected compliance analytics dashboard for a Kenyan financial institution, reducing manual reporting effort by 95%',
       'Design RAG-powered AI systems using LangChain and vector databases for client intelligence applications',
       'Build custom ETL pipelines for organisations moving from manual Excel workflows to automated analytics infrastructure',
-      'Provide data strategy consulting for African enterprises — scoping, architecture, and delivery',
+      'Provide data strategy consulting for African enterprises: scoping, architecture, and delivery',
     ],
     technologies: ['LangChain', 'FastAPI', 'PostgreSQL', 'dbt', 'Power BI', 'Docker', 'React'],
   },
   {
     id: 3,
-    company: 'Remote — Global AI Clients',
+    company: 'Remote - Global AI Clients',
     position: 'Freelance AI Trainer, Data Annotator & Analyst',
     location: 'Remote',
     startDate: '2021',
@@ -59,7 +59,7 @@ export const experience = [
     startDate: 'October 2024',
     endDate: 'January 2025',
     current: false,
-    description: 'Applied data-driven investigative methodology in a high-volume active law enforcement environment — the most direct proof point of governance-aware, investigative data thinking applied under operational pressure.',
+    description: 'Applied data-driven investigative methodology in a high-volume active law enforcement environment: the most direct proof point of governance-aware, investigative data thinking applied under operational pressure.',
     responsibilities: [
       'Analysed 200+ investigative case files, identifying behavioural patterns and crime trends that informed operational planning',
       'Digitised and catalogued sensitive records under strict confidentiality protocols and chain-of-custody governance standards',
@@ -92,7 +92,7 @@ export const experience = [
     startDate: 'August 2021',
     endDate: 'March 2022',
     current: false,
-    description: 'Managed sales operations and team performance in consumer electronics retail. Used structured data collection and analysis to drive measurable commercial outcomes — early applied proof of data thinking in non-technical environments.',
+    description: 'Managed sales operations and team performance in consumer electronics retail. Used structured data collection and analysis to drive measurable commercial outcomes; early applied proof of data thinking in non-technical environments.',
     responsibilities: [
       'Increased monthly sales by 15% through data-informed customer targeting and structured upselling strategies',
       'Built Excel-based KPI dashboards for weekly performance reporting to management',
