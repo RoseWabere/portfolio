@@ -9,7 +9,7 @@ export default function CompactExperience() {
   const recentExperience = experience.slice(0, 3)
 
   return (
-    <section id="experience" className="py-16 section-gray">
+    <section id="experience" className="py-16 section-white">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

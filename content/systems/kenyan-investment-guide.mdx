@@ -1,0 +1,833 @@
+---
+title: "Kenya Financial Intelligence System"
+badge: "FINTECH · RAG · WHATSAPP"
+role: "Full-Stack Data & AI Engineer"
+description: "Kenya-first financial intelligence platform combining a RAG Q&A engine, rule-based investment decision system, localized knowledge base, and a custom WhatsApp bot — built to democratise investing knowledge for Kenyan retail investors."
+stack: ["FastAPI", "PostgreSQL", "pgvector", "Claude API", "whatsapp-web.js", "sentence-transformers", "Docker", "Alembic", "MinIO", "APScheduler"]
+githubUrl: "https://github.com/Rozieroz/kenyan-financial-intelligence"
+featured: true
+impact: "Full backend + WhatsApp bot serving Kenya's ~38% financially literate population with actionable, regulated, localised investment guidance"
+image: "/images/projects/kenya-fintel.png"
+
+problem: |
+  Kenya has one of the lowest financial literacy rates in East Africa (~38%).
+  Existing tools like NSE, CMA portals, Yahoo Finance, and Investopedia, are either
+  raw data dumps, globally-focused, or biased toward single providers. Kenyan
+  retail investors have no single trusted, localised source that combines regulated 
+  data, plain-language education, and actionable investment plans accessible on their 
+  primary communication channel: WhatsApp.
+
+solution: |
+  Engineered a full-stack financial intelligence backend: a FastAPI REST API
+  backed by PostgreSQL + pgvector for vector similarity search, a three-mode
+  RAG engine using Claude (Anthropic) for answer generation, a rule-based
+  decision engine mapping user profiles to investment allocations, automated
+  data scrapers (Yahoo Finance, CBK, CMA, NewsAPI/RSS), and a custom
+  whatsapp-web.js bot that forwards messages to the FastAPI webhook and
+  returns AI-powered financial guidance — all containerised in Docker Compose.
+
+architecture: |
+  WhatsApp User → whatsapp-web.js Bot → POST /webhook/whatsapp →
+  FastAPI RAG Service → pgvector similarity search + Claude API →
+  Structured DB injection (providers, investments) → Reply to user.
+  Parallel: APScheduler Worker → Yahoo Finance / CBK / CMA / NewsAPI
+  scrapers → PostgreSQL + MinIO → always-fresh knowledge base.
+
+engineering_highlights: |
+  pgvector cosine similarity (ivfflat index, 384-dim embeddings via
+  sentence-transformers all-MiniLM-L6-v2); three-mode RAG (KB chunks,
+  structured DB injection, news fallback); explicit rule-based decision
+  engine with 100% traceable allocations; LocalAuth WhatsApp session
+  persistence (scan QR once); per-number rate limiting; CBK/CMA
+  regulation validator and scam-detection rules; Kenya timezone-aware
+  APScheduler cron jobs.
+---
+
+## Overview
+
+The Kenya Financial Intelligence System is a backend platform designed to give
+Kenyan retail investors — from M-Pesa mobile-first users to SACCO members and
+young Nairobi professionals — trusted, actionable financial guidance in one
+place. It combines a Retrieval-Augmented Generation (RAG) Q&A engine, a
+rule-based investment decision engine, an automated data pipeline, and a custom
+WhatsApp bot, all served through a FastAPI REST API.
+
+The system answers questions like:
+- *"Best MMF for a beginner with KES 5,000?"*
+- *"Is Stima SACCO registered with SASRA?"*
+- *"I earn KES 45k/month. How should I invest for a house in 7 years?"*
+
+---
+
+## System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        USER CHANNELS                            │
+│                                                                 │
+│   WhatsApp ──────────────┐      Web Frontend ──────────────┐   │
+│   (whatsapp-web.js bot)  │      (Next.js — coming soon)    │   │
+└──────────────────────────┼─────────────────────────────────┘   │
+                           │                                      │
+                    POST /webhook/whatsapp        REST API        │
+                           │                        │             │
+┌──────────────────────────▼────────────────────────▼───────────┐
+│                     FastAPI Backend                            │
+│                    (Python 3.11)                               │
+│                                                                │
+│  ┌────────────┐  ┌─────────────┐  ┌──────────────┐           │
+│  │  Auth API  │  │  Chat/RAG   │  │  Recommend.  │           │
+│  │  /api/auth │  │  /api/chat  │  │  /api/reco.. │           │
+│  └────────────┘  └──────┬──────┘  └──────┬───────┘           │
+│                         │                │                    │
+│               ┌─────────▼────────┐   Rule-based              │
+│               │   RAG Service    │   Decision Engine         │
+│               │                  │                           │
+│               │ 1. pgvector      │   income tier →           │
+│               │    similarity    │   risk profile →          │
+│               │ 2. Structured DB │   horizon →               │
+│               │    injection     │   allocation plan         │
+│               │ 3. News fallback │                           │
+│               │ 4. Claude API    │                           │
+│               └─────────┬────────┘                           │
+└─────────────────────────┼──────────────────────────────────┘
+                          │
+┌─────────────────────────▼──────────────────────────────────┐
+│                     Data Layer                              │
+│                                                             │
+│  PostgreSQL + pgvector          MinIO Object Storage        │
+│  ┌─────────────────────┐        ┌──────────────────────┐   │
+│  │ users               │        │ CBK PDF reports       │   │
+│  │ providers           │        │ Fund fact sheets      │   │
+│  │ investments         │        │ CMA bulletins         │   │
+│  │ knowledge_chunks    │        └──────────────────────┘   │
+│  │  └─ embedding(384d) │                                    │
+│  │ news_articles       │                                    │
+│  │  └─ embedding(384d) │                                    │
+│  │ macro_indicators    │                                    │
+│  │ stock_prices        │                                    │
+│  │ chat_sessions       │                                    │
+│  │ chat_messages       │                                    │
+│  │ glossary            │                                    │
+│  │ query_logs          │                                    │
+│  └─────────────────────┘                                    │
+└────────────────────────────────────────────────────────────┘
+                          │
+┌─────────────────────────▼──────────────────────────────────┐
+│                  Worker Container                           │
+│              (APScheduler, Africa/Nairobi TZ)               │
+│                                                             │
+│  Every 15 min  → Yahoo Finance (NSE OHLCV)                  │
+│  Every 30 min  → News RSS + NewsAPI → embed → store         │
+│  Daily 06:00   → CBK T-bill yields + macro indicators       │
+│  Daily 07:00   → CMA licensed entities scraper              │
+└────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Project Structure
+
+```
+kenyan-fintel/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   ├── auth.py               # Register, login, JWT tokens
+│   │   │   ├── chat.py               # Authenticated + anonymous RAG chat
+│   │   │   ├── directory.py          # Provider + investment listings
+│   │   │   ├── market.py             # NSE quotes, macro indicators
+│   │   │   ├── recommendation.py     # Decision engine endpoint
+│   │   │   └── whatsapp_webhook.py   # WhatsApp bridge + PLAN command parser
+│   │   │
+│   │   ├── core/
+│   │   │   ├── config.py             # pydantic-settings (all env vars)
+│   │   │   └── security.py           # bcrypt, JWT create/decode, FastAPI dep
+│   │   │
+│   │   ├── db/
+│   │   │   └── session.py            # Async SQLAlchemy engine + get_db
+│   │   │
+│   │   ├── models/
+│   │   │   └── models.py             # 10 ORM models (pgvector Vector columns)
+│   │   │
+│   │   ├── schemas/
+│   │   │   └── schemas.py            # Pydantic v2 request/response contracts
+│   │   │
+│   │   ├── services/
+│   │   │   ├── rag_service.py        # Three-mode RAG + Claude API
+│   │   │   ├── decision_engine.py    # Rule-based allocation engine
+│   │   │   └── embedding_service.py  # sentence-transformers singleton
+│   │   │
+│   │   ├── scrapers/
+│   │   │   ├── yahoo_finance.py      # NSE OHLCV via yfinance
+│   │   │   ├── cma_scraper.py        # CMA licensees (brokers, funds, REITs)
+│   │   │   ├── cbk_scraper.py        # CBK T-bill yields + macro fallbacks
+│   │   │   └── news_scraper.py       # RSS + NewsAPI with embedding generation
+│   │   │
+│   │   └── main.py                   # FastAPI app, lifespan, CORS, routers
+│   │
+│   ├── migrations/
+│   │   ├── env.py                    # Alembic async env
+│   │   └── versions/
+│   │       └── 0001_initial.py       # Full schema + ivfflat vector index
+│   │
+│   ├── tests/
+│   │   └── test_decision_engine.py   # 6 passing unit tests
+│   │
+│   ├── alembic.ini
+│   └── requirements.txt
+│
+├── whatsapp-bot/
+│   ├── src/
+│   │   └── index.js                  # whatsapp-web.js client + bridge
+│   ├── package.json
+│   └── .env.example
+│
+├── worker/
+│   └── worker.py                     # APScheduler cron container
+│
+├── docker/
+│   ├── Dockerfile.backend
+│   ├── Dockerfile.worker
+│   └── Dockerfile.whatsapp           # Node 18 + Chromium for Puppeteer
+│
+├── scripts/
+│   ├── init_db.sql                   # pgvector + uuid-ossp extensions
+│   ├── seed_kb.py                    # Starter KB: 10 chunks, glossary, providers
+│   └── run_migrations.sh
+│
+├── docker-compose.yml
+├── .env.example
+└── README.md
+```
+
+---
+
+## API Reference
+
+All endpoints are served at `http://localhost:8000`. Interactive docs at `/docs`.
+
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/auth/register` | Register with email or phone |
+| `POST` | `/api/auth/token` | Login → returns JWT Bearer token |
+
+**Register request:**
+```json
+{
+  "email": "amina@example.com",
+  "password": "securepass123",
+  "risk_profile": "medium",
+  "goals": ["house", "retirement"],
+  "investment_horizon_years": 7,
+  "income_bracket": "30-100k"
+}
+```
+
+**Login (form data):**
+```
+username=amina@example.com&password=securepass123
+```
+
+**All protected routes require:**
+```
+Authorization: Bearer <token>
+```
+
+---
+
+### Chat / RAG Q&A
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/chat` | Required | Authenticated RAG chat |
+| `POST` | `/api/chat/anonymous` | None | Unauthenticated (WhatsApp onboarding) |
+
+**Request:**
+```json
+{
+  "message": "What is the best MMF for a beginner in Kenya?",
+  "session_id": null
+}
+```
+
+**Response:**
+```json
+{
+  "answer": "For beginners, CIC Money Market Fund or Sanlam MMF are excellent...",
+  "sources": [
+    { "title": "CMA Kenya / Fund Manager Brochures", "source": "CMA Kenya", "relevance": 0.91 }
+  ],
+  "confidence": 0.87,
+  "session_id": "uuid-here"
+}
+```
+
+Pass `session_id` on subsequent messages to maintain conversation history (last 10 turns sent to Claude).
+
+---
+
+### Investment Recommendation
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/recommendation` | None | Rule-based allocation plan |
+
+**Request:**
+```json
+{
+  "income_kes_monthly": 50000,
+  "risk": "medium",
+  "goals": ["house", "education"],
+  "horizon_years": 7,
+  "age": 31,
+  "has_debt": false
+}
+```
+
+**Response:**
+```json
+{
+  "plan": [
+    {
+      "category": "Money Market Fund",
+      "allocation_pct": 20,
+      "rationale": "Liquid buffer for all investors.",
+      "example_products": ["CIC MMF", "Britam MMF"]
+    },
+    {
+      "category": "Government Bonds / T-bills",
+      "allocation_pct": 28,
+      "rationale": "Stable 13-15% p.a. returns. Ideal for 7-year horizon.",
+      "example_products": ["Infrastructure Bond IFB1/2026/28", "CBK 91-day T-bill"]
+    },
+    {
+      "category": "SACCO Shares / Deposits",
+      "allocation_pct": 17,
+      "rationale": "SACCOs offer loans at 3× deposits — ideal for home goal.",
+      "example_products": ["Stima SACCO", "Mwalimu National SACCO"]
+    },
+    {
+      "category": "NSE Equities / Unit Trusts",
+      "allocation_pct": 25,
+      "rationale": "7-year horizon allows equity growth.",
+      "example_products": ["Safaricom PLC", "CIC Equity Fund"]
+    },
+    {
+      "category": "REIT",
+      "allocation_pct": 10,
+      "rationale": "Real estate exposure without direct purchase.",
+      "example_products": ["Acorn REIT (ASSR)"]
+    }
+  ],
+  "explanation": "Based on medium income bracket (KES 50,000/month), medium risk...",
+  "recommended_actions": [
+    "Open a CBK DhowCSD account to access T-bills.",
+    "Join an SSRA-registered SACCO to access subsidised loans."
+  ],
+  "sources": ["CBK T-bill/bond yields", "CMA licensed investment products"],
+  "disclaimer": "This is not licensed financial advice. Consult a CMA-licensed advisor."
+}
+```
+
+---
+
+### Investment Directory
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/providers?type=broker&regulated_by=CMA` | List verified providers |
+| `GET` | `/api/investments?category=mmf&risk_level=low` | Filter investments |
+
+**Provider filter params:** `type` (broker/fund_manager/sacco/bank/government), `regulated_by` (CMA/CBK/SASRA), `beginner_friendly` (true/false)
+
+**Investment filter params:** `category` (bond/tbill/stock/etf/reit/mmf/sacco_shares/unit_trust), `risk_level` (low/medium/high), `max_min_investment` (KES), `regulated_by`
+
+---
+
+### Market Data
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/market/stocks?ticker=SCOM.NR` | Latest NSE OHLCV |
+| `GET` | `/api/market/macro` | CBR, inflation, T-bill yields |
+
+---
+
+### WhatsApp Webhook (internal — called by Node.js bot)
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/webhook/whatsapp` | Header secret | Receives messages, returns reply |
+
+**Header required:** `x-whatsapp-secret: <WHATSAPP_WEBHOOK_SECRET>`
+
+**Request (sent by Node bot):**
+```json
+{
+  "from_number": "254712345678",
+  "message": "Which broker should I use for NSE?",
+  "message_id": "abc123",
+  "timestamp": "2026-04-11T09:30:00Z"
+}
+```
+
+**Response (Node bot sends this back to WhatsApp):**
+```json
+{
+  "to": "254712345678",
+  "body": "For NSE investing, Faida Investment Bank and Sterling Capital..."
+}
+```
+
+**WhatsApp built-in commands:**
+- `hi` / `hello` / `habari` / `start` → Welcome message with menu
+- `PLAN` → Shows PLAN command format
+- `PLAN 50000 medium house 7` → Runs decision engine, returns formatted plan
+
+---
+
+## RAG Pipeline — How It Works
+
+Each chat message goes through three retrieval modes before hitting Claude:
+
+```
+User message
+    │
+    ▼
+1. EMBED query (sentence-transformers, 384 dims)
+    │
+    ▼
+2. pgvector cosine similarity search
+   → Top 5 knowledge_chunks (KB articles, guides, regulation)
+   → Top 3 news_articles (recent finance news)
+    │
+    ▼
+3. Structured DB injection (if query contains: broker/fund/sacco/bond/mmf/reit)
+   → Fetch verified providers from DB
+   → Append as plain-text context block
+    │
+    ▼
+4. Build context string + fetch last 10 chat turns (session history)
+    │
+    ▼
+5. POST to Claude API (claude-sonnet-4-20250514)
+   System prompt: Kenya-first, cite sources, flag unregulated products,
+                  plain English + optional Kiswahili, disclaimer on every reply
+    │
+    ▼
+6. Persist ChatSession + ChatMessages + QueryLog
+    │
+    ▼
+Return {answer, sources, confidence, session_id}
+```
+
+**Confidence score** = average cosine similarity of retrieved chunks. Low confidence answers include a disclaimer.
+
+---
+
+## Decision Engine — Allocation Rules
+
+The engine maps a `UserProfile` to an explicit allocation plan. Every rule is traceable:
+
+| Signal | Rule |
+|--------|------|
+| `income < 30k` | 50% MMF emergency buffer first |
+| `has_debt = true` | Add "Debt clearance" note; increase MMF |
+| `risk = low` OR `horizon < 3yr` | 35% bonds/T-bills; no equity |
+| `goals contains 'house'/'land'` | Add SACCO (loan leverage for property) |
+| `horizon >= 5yr` AND `risk = medium/high` | Add NSE equities / unit trusts |
+| `tier = high` AND `risk = medium/high` | Add REIT exposure |
+| `age < 30` AND `horizon >= 5yr` | Higher equity weight |
+| All cases | Final allocation normalised to exactly 100% |
+
+No ML — every decision can be read and explained to a regulator.
+
+---
+
+## Data Pipeline
+
+### Scrapers
+
+| Scraper | Source | Frequency | Data |
+|---------|--------|-----------|------|
+| `yahoo_finance.py` | Yahoo Finance API | Every 15 min | NSE OHLCV (8 tickers) |
+| `news_scraper.py` | Business Daily RSS, Nation RSS, NewsAPI | Every 30 min | Articles + embeddings |
+| `cbk_scraper.py` | CBK website | Daily 06:00 | T-bill yields, CBR, CPI |
+| `cma_scraper.py` | licensees.cma.or.ke | Daily 07:00 | Verified providers |
+
+### Seed Data (run once)
+
+`scripts/seed_kb.py` populates:
+- 10 knowledge chunks (MMFs, T-bills, bonds, SACCOs, REITs, NSE guide, scam warnings, M-Akiba, unit trusts, beginners guide) — all with embeddings
+- 10 glossary terms (NAV, Yield, Liquidity, CDS, DhowCSD, SASRA, CMA, etc.) with Kiswahili translations
+- 10 verified providers (CIC, Britam, Sanlam, Old Mutual, Faida, Sterling, Stima SACCO, Harambee SACCO, Mwalimu SACCO, CBK)
+- 8 seed investments (91-day T-bill, 182-day T-bill, Infrastructure Bond, CIC MMF, Britam MMF, Acorn REIT, Safaricom stock, SACCO shares)
+
+---
+
+## Environment Variables
+
+Full reference — all variables in `.env`:
+
+```bash
+# ─── Database ────────────────────────────────────────────────
+DATABASE_URL=postgresql+asyncpg://app:secret@localhost:5432/kenyan_fintel
+DATABASE_URL_SYNC=postgresql://app:secret@localhost:5432/kenyan_fintel
+
+# ─── Security ────────────────────────────────────────────────
+SECRET_KEY=<run: openssl rand -hex 32>
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+
+# ─── AI / LLM ────────────────────────────────────────────────
+ANTHROPIC_API_KEY=sk-ant-...
+
+# ─── Embedding model (local, no API key needed) ──────────────
+EMBEDDING_MODEL=all-MiniLM-L6-v2
+EMBEDDING_DIM=384
+
+# ─── MinIO ───────────────────────────────────────────────────
+MINIO_ENDPOINT=localhost:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+
+# ─── External APIs ───────────────────────────────────────────
+NEWS_API_KEY=<from newsapi.org — free tier>
+YAHOO_FINANCE_BASE=https://query1.finance.yahoo.com/v8/finance/chart
+
+# ─── WhatsApp Bot bridge ─────────────────────────────────────
+WHATSAPP_WEBHOOK_SECRET=<random string — shared by bot and backend>
+WHATSAPP_BRIDGE_PORT=3001
+```
+
+---
+
+## Changing the Anthropic API Key
+
+The API key is read **once at startup** from the environment. To rotate it:
+
+### In Docker Compose (local / self-hosted)
+
+1. Open `.env`
+2. Replace the line:
+   ```
+   ANTHROPIC_API_KEY=sk-ant-old-key
+   ```
+   with:
+   ```
+   ANTHROPIC_API_KEY=sk-ant-new-key
+   ```
+3. Restart only the backend and worker:
+   ```bash
+   docker compose restart backend worker
+   ```
+   The database and WhatsApp bot do not need a restart.
+
+### In Render (production backend)
+
+1. Go to your Render service dashboard → **Environment**
+2. Find `ANTHROPIC_API_KEY` → click Edit → paste new key → Save
+3. Render will trigger an automatic redeploy (takes ~2 minutes)
+4. No downtime for the database (Aiven) or WhatsApp bot
+
+### In Aiven / any managed platform
+
+Same pattern — update the environment variable in the platform's dashboard or secrets manager. The key is only referenced in:
+```
+backend/app/core/config.py  →  ANTHROPIC_API_KEY: str
+backend/app/services/rag_service.py  →  anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
+```
+
+Those two files are the only places the key is consumed. No hardcoding anywhere.
+
+### To switch LLM provider entirely
+
+In `backend/app/services/rag_service.py`, the Claude call is isolated in the `answer_query()` function:
+
+```python
+# Current (Anthropic Claude)
+_claude = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
+
+response = await _claude.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=1000,
+    system=SYSTEM_PROMPT,
+    messages=messages,
+)
+answer = response.content[0].text
+```
+
+To swap to OpenAI, replace those lines with:
+```python
+from openai import AsyncOpenAI
+_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+
+response = await _client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "system", "content": SYSTEM_PROMPT}] + messages,
+)
+answer = response.choices[0].message.content
+```
+
+To swap to Groq (LLaMA):
+```python
+from groq import AsyncGroq
+_client = AsyncGroq(api_key=settings.GROQ_API_KEY)
+
+response = await _client.chat.completions.create(
+    model="llama-3.3-70b-versatile",
+    messages=[{"role": "system", "content": SYSTEM_PROMPT}] + messages,
+)
+answer = response.choices[0].message.content
+```
+
+Add the corresponding key to `.env` and `config.py`. Everything else stays the same.
+
+---
+
+## Frontend Integration Points
+
+The backend exposes clean REST JSON — any frontend can connect.
+Here are all the hooks a Next.js / React frontend needs:
+
+### Base URL
+
+```typescript
+// lib/api.ts
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+```
+
+### Auth Flow
+
+```typescript
+// 1. Register
+POST /api/auth/register
+Body: { email, password, risk_profile, goals, income_bracket }
+
+// 2. Login → store token
+POST /api/auth/token  (form data: username, password)
+→ { access_token, token_type }
+// Store in: localStorage or httpOnly cookie
+
+// 3. All protected requests
+headers: { Authorization: `Bearer ${token}` }
+```
+
+### Chat Widget
+
+```typescript
+// Start / continue a chat session
+POST /api/chat  (authenticated)
+POST /api/chat/anonymous  (public)
+Body: { message: string, session_id?: string }
+→ { answer, sources, confidence, session_id }
+
+// Pass session_id back on every subsequent message to maintain history
+```
+
+### Recommendation Form
+
+```typescript
+// Collect profile from a multi-step form, then:
+POST /api/recommendation
+Body: {
+  income_kes_monthly: number,
+  risk: "low" | "medium" | "high",
+  goals: string[],
+  horizon_years: number,
+  age: number,
+  has_debt: boolean
+}
+→ { plan[], explanation, recommended_actions[], disclaimer }
+```
+
+### Investment Directory
+
+```typescript
+// Provider listing (filter by type, regulator)
+GET /api/providers?type=broker&regulated_by=CMA&beginner_friendly=true
+
+// Investment listing (filter by category, risk, min investment)
+GET /api/investments?category=mmf&risk_level=low&max_min_investment=5000
+```
+
+### Market Data Dashboard
+
+```typescript
+// Latest NSE prices
+GET /api/market/stocks
+GET /api/market/stocks?ticker=SCOM.NR
+
+// Macro indicators (CBR, inflation, T-bill yields)
+GET /api/market/macro
+```
+
+---
+
+## Frontend Design Direction
+
+The recommended frontend aesthetic for this system:
+
+**Style:** Warm editorial finance — not cold Bloomberg terminals, not generic dashboards.
+Think *African fintech meets Economist magazine*. Trustworthy, human, grounded.
+
+**Typography:**
+- Display / headings: `Fraunces` (variable, optical sizing) — authoritative yet warm
+- Body / UI: `DM Sans` — clean, readable on mobile
+- Data / numbers: `JetBrains Mono` — tabular figures for prices and yields
+
+**Colour palette:**
+```css
+--bg:           #0F0E0B;    /* near-black warm */
+--surface:      #1A1916;    /* card background */
+--border:       #2E2C28;    /* subtle divider */
+--accent:       #C8A96E;    /* Kenyan gold — primary action */
+--accent-green: #4CAF7D;    /* positive returns */
+--accent-red:   #E05E52;    /* risk warnings */
+--text-primary: #F0EDE6;    /* off-white */
+--text-muted:   #8A8578;    /* secondary labels */
+```
+
+**Key pages / components:**
+
+1. **`/` Home** — Hero with chat input front and centre. "Ask anything about investing in Kenya."
+   Subtitle: "CMA-verified data. No bias. No ads." Trust badges (CMA, CBK, SASRA logos).
+
+2. **`/chat`** — Full chat UI. Sources shown as citation chips below each answer.
+   Confidence bar. Session history in sidebar. Mobile-first (WhatsApp muscle memory).
+
+3. **`/plan`** — Multi-step profile form (income, risk, goals, horizon).
+   Step 4: animated allocation donut chart. Actionable steps with provider cards.
+
+4. **`/directory`** — Searchable, filterable table of providers and investments.
+   CMA-verified badge. Risk pill (green/amber/red). Min investment chip.
+
+5. **`/market`** — NSE ticker cards (sparkline + daily change).
+   Macro strip at top: CBR | Inflation | 91d T-bill yield — updated daily.
+
+6. **`/learn`** — Glossary cards with Kiswahili terms. Searchable.
+   Article cards linking to expanded KB content.
+
+**Component pattern:**
+
+```typescript
+// Every API call uses a shared fetch wrapper
+export async function apiFetch<T>(
+  path: string,
+  options?: RequestInit,
+  token?: string
+): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options?.headers,
+    },
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+```
+
+---
+
+## Running Locally
+
+```bash
+# 1. Clone and configure
+git clone https://github.com/Rozieroz/kenyan-financial-intelligence
+cd kenyan-financial-intelligence
+cp .env.example .env
+# Edit .env: add ANTHROPIC_API_KEY and NEWS_API_KEY
+
+# 2. Start all services
+docker compose up --build
+
+# 3. Run migrations + seed KB (first time only)
+docker compose exec backend alembic upgrade head
+docker compose exec backend python scripts/seed_kb.py
+
+# 4. Connect WhatsApp
+docker compose logs -f whatsapp-bot
+# Scan the QR code printed in the logs with your WhatsApp
+# Session is saved to Docker volume — scan once only
+
+# 5. Open API docs
+open http://localhost:8000/docs
+
+# 6. Test the recommendation endpoint
+curl -X POST http://localhost:8000/api/recommendation \
+  -H "Content-Type: application/json" \
+  -d '{"income_kes_monthly":50000,"risk":"medium","goals":["house"],"horizon_years":7,"age":30,"has_debt":false}'
+```
+
+---
+
+## Deployment
+
+### Backend → Render
+
+```bash
+# Push backend/ as a Docker service on Render
+# Set all .env variables in Render → Environment tab
+# DATABASE_URL → your Aiven PostgreSQL connection string
+# Health check path: /health
+```
+
+### Database → Aiven PostgreSQL
+
+```bash
+# Enable pgvector extension (Aiven supports it natively on PG15+)
+# Use the Aiven connection string in DATABASE_URL and DATABASE_URL_SYNC
+# Aiven encrypts at rest and in transit by default
+```
+
+### Frontend → Vercel
+
+```bash
+# Next.js frontend deploys to Vercel automatically on push
+# Set NEXT_PUBLIC_API_URL=https://your-render-service.onrender.com
+```
+
+### WhatsApp Bot → VPS (DigitalOcean / Hetzner)
+
+```bash
+# whatsapp-web.js requires a persistent process (not serverless)
+# Cheapest option: $4/month Hetzner CX11 VPS
+# docker compose up whatsapp-bot -d
+# docker compose logs -f whatsapp-bot  → scan QR once
+# Session persists in Docker volume
+```
+
+---
+
+## Tests
+
+```bash
+cd backend
+pytest tests/ -v
+
+# Current coverage:
+# test_total_is_100              PASSED
+# test_low_income_mmf_dominant   PASSED
+# test_high_risk_long_horizon_has_equity  PASSED
+# test_house_goal_has_sacco      PASSED
+# test_short_horizon_no_equity   PASSED
+# test_disclaimer_present        PASSED
+```
+
+---
+
+## Roadmap
+
+| Phase | Timeline | Key Deliverables |
+|-------|----------|-----------------|
+| MVP (current) | 0–30 days | Backend + WhatsApp bot + seed KB + decision engine |
+| Beta | 30–90 days | Next.js frontend, full CMA/CBK data automation, WhatsApp onboarding flow |
+| Launch | 90–180 days | Confidence scoring, Elasticsearch full-text search, Africa's Talking SMS fallback, Kiswahili language mode |
+| Scale | 180d+ | Paid Twilio WhatsApp Business API, Redis cache, Airflow for complex pipelines |

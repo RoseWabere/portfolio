@@ -25,7 +25,7 @@ export default function BlogSection() {
   }, [])
 
   return (
-    <section id="blog" className="py-24 section-white">
+    <section id="blog" className="py-24 section-gray">
       <div className="container mx-auto px-6">
 
         {/* Header */}

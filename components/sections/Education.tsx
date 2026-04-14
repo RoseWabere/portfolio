@@ -5,7 +5,7 @@ import { education, certifications } from '@/lib/data'
 
 export default function Education() {
   return (
-    <section id="education" className="py-24 section-white">
+    <section id="education" className="py-24 section-gray">
       <div className="container mx-auto px-6">
         {/* Education */}
         <div className="mb-16">

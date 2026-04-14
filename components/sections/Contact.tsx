@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-24 section-gray">
+    <section id="contact" className="py-24 section-white">
       <div className="container mx-auto px-6">
 
         {/* HEADER */}
@@ -24,8 +24,8 @@ export default function Contact() {
             Whether you're hiring, building, or scaling — I design systems that move data into decisions.
           </p>
 
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-full">
-            <i className="fas fa-bolt text-amber-600"></i>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-half">
+            <i className="fas fa-bolt text-blue-600"></i>
             <span className="text-sm text-amber-800 font-medium">
               Open to roles & high-impact projects
             </span>

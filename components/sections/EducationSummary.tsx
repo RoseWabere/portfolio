@@ -9,7 +9,7 @@ export default function EducationSummary() {
   const primaryDegree = education[0]
 
   return (
-    <section id="education" className="py-16 section-white">
+    <section id="education" className="py-16 section-gray">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
